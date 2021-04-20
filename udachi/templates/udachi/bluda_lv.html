@@ -1,0 +1,33 @@
+{% extends 'udachi/base.html' %}
+
+
+{% load static %}
+{% load thumbnail %}
+
+{% block Content %}
+
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            {% for i_bluda in bluda %}
+                <div class="col-12 col-md-6 col-lg-4 col-xl-4">
+                    <div class="card h-100">
+                        {% if i_bluda.prevyu %}
+                            {% thumbnail i_bluda.prevyu 350x350  as image %}
+                            <img class="card-img-top" src="/{{ image }}">
+
+
+                        {% else %}
+                            <img class="card-img-top img-fluid" src="{% static 'udachi/logo.png' %}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ i_bluda.nazvanie }}</h5>
+                            <p class="card-text">{{ i_bluda.cena }}</p>
+                            <a data-id-bluda="{{ i_bluda.id }}" href="#"
+                               class="btn btn-outline-success btn_dobavlenie_v_korzinu">В корзину</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
