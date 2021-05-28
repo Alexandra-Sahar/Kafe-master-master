@@ -33,6 +33,8 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'udachi',
+    'cart',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,10 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'easy_thumbnails',
-
     'import_export',
 
-    'udachi',
 ]
 
 MIDDLEWARE = [
@@ -55,6 +55,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
 ]
 
 ROOT_URLCONF = 'kafe.urls'
@@ -76,7 +77,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'kafe.wsgi.application'
+# WSGI_APPLICATION = 'udachi.wsgi.application'
 
 
 # Database
@@ -86,6 +87,12 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+
+'HOST' : 'ec2-63-34-97-163.eu-west-1.compute.amazonaws.com',
+'DATABASE': 'd4pd1t844g9b94',
+'USER' : 'ullmqnkayfkjjf',
+'PORT' : 5432,
+'PASSWORD' : '036fb249d8d02de0aca0dc34441c1a4fdce7d0a4c25f6fd7a861d7c0a2164d4c',
     }
 }
 
@@ -108,7 +115,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 
+EMAIL_HOST_USER = 'kafeudachismolenka@gmail.com'
+EMAIL_HOST_PASSWORD = 'udachi123'
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
@@ -121,6 +133,10 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+# SESSION_ENGINE = 'Cached sessions'
+
+CART_SESSION_ID = 'cart'
 
 
 # Static files (CSS, JavaScript, Images)

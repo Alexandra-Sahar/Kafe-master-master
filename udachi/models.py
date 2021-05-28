@@ -1,8 +1,9 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.conf import settings
+from django.http import JsonResponse
+from django.core.mail import EmailMessage, send_mail
 
-
-# Create your models here.
 
 class TipBluda(models.Model):
     class Meta:
@@ -54,17 +55,6 @@ class IngridientiVBlude(models.Model):
     gramovka = models.FloatField('Граммовка', )
 
 
-class Akzia(models.Model):
-    class Meta:
-        verbose_name = 'Акция'
-        verbose_name_plural = 'Акции'
-
-    nazvanie = models.CharField(verbose_name='Название', max_length=255, null=False, blank=False)
-
-    def __str__(self):
-        return self.nazvanie
-
-
 class Zakaz(models.Model):
     class Meta:
         verbose_name = 'Заказ'
@@ -78,7 +68,6 @@ class Zakaz(models.Model):
 
     telephone = models.CharField(max_length=30, null=True, blank=True, verbose_name='Телефон')
     fio = models.CharField('ФИО', max_length=255, null=True, blank=True)
-    akzia = models.ForeignKey(Akzia, verbose_name='Акция', null=True, blank=True, on_delete=models.SET_NULL)
     data_i_vremia_zakaza = models.DateTimeField('Время заказа', auto_now_add=True, editable=False)
     adres = models.CharField('Адрес', max_length=255, null=True, blank=True, )
     stolik = models.IntegerField('Номер столика', null=True, blank=True, )
@@ -88,7 +77,6 @@ class Zakaz(models.Model):
         return f'#{self.id}'
 
 
-
 class DetaliZakaza(models.Model):
     class Meta:
         verbose_name = 'Деталь заказа'
@@ -96,6 +84,7 @@ class DetaliZakaza(models.Model):
 
     zakaz = models.ForeignKey(Zakaz, verbose_name='Заказ', on_delete=models.CASCADE)
     bludo = models.ForeignKey(Bluda, verbose_name='Блюдо', null=True, blank=True, on_delete=models.SET_NULL)
+    kolvo = models.FloatField('Кол-во', default=1)
     stoimost_na_moment_realizazii = models.FloatField('Цена на момент реализации', null=True, blank=True)
 
 
@@ -104,12 +93,12 @@ class Bronirovanie(models.Model):
         verbose_name = 'Бронирование'
         verbose_name_plural = 'Бронирования'
 
-    vremia = models.TimeField('Время', null=True, blank=True)
-    data = models.DateField('Дата', null=True, blank=True)
-    telephone = models.CharField('Tелефон', null=True, blank=True, max_length=255, )
+    data = models.DateTimeField('Дата', null=True, blank=True)
+    telephone = models.CharField('Tелефон', null=False, blank=False, max_length=255, )
     fio = models.CharField('ФИО', null=True, blank=True, max_length=255, )
     status_bronirovania = models.BooleanField('Бронь  подтверждена', default=False)
     predoplata = models.BooleanField('Предоплата', default=False)
+    kolvo_gostei = models.IntegerField('Количество гостей', null=True, blank=True)
     stolik = models.IntegerField('Номер столика', null=True, blank=True, )
 
 
@@ -121,7 +110,7 @@ class Sklad(models.Model):
     nazvanie = models.CharField('Название склада', max_length=255)
 
     def __str__(self):
-        return  self.nazvanie
+        return self.nazvanie
 
 
 class IngridientiNaSklade(models.Model):
@@ -167,8 +156,6 @@ class IstoriaizmeneniaNaSkladax(models.Model):
                                    blank=True)
 
 
-
-
 class Postavshiki(models.Model):
     class Meta:
         verbose_name = 'Поставщик'
@@ -176,27 +163,29 @@ class Postavshiki(models.Model):
 
     naimenovanie = models.CharField(max_length=255, verbose_name='Наименование')
     telephone = models.CharField('Tелефон', null=True, blank=True, max_length=255)
+    email = models.EmailField('Электронная почта', null=False, blank=False, default='kafeudachismolenka@gmail.com')
     adres = models.CharField('Адрес', null=True, blank=True, max_length=255)
     opisanie = models.TextField('Описание', null=True, blank=True)
     inn = models.CharField('ИНН', null=True, blank=True, max_length=255)
 
+    def __str__(self):
+        return self.naimenovanie
 
-class Sotrudnic(models.Model):
-    class Meta:
-        verbose_name = 'Сотрудник'
-        verbose_name_plural = 'Сотрудники'
 
-    user = models.OneToOneField(User, verbose_name='Логин', on_delete=models.CASCADE)
-    telephone = models.CharField('Tелефон', null=True, blank=True, max_length=255)
-    data_rozdenia = models.DateField('Дата рождения', null=True, blank=True)
-
+# class Sotrudnic(models.Model):
+#     class Meta:
+#         verbose_name = 'Сотрудник'
+#         verbose_name_plural = 'Сотрудники'
+#
+#     user = models.OneToOneField(User, verbose_name='Логин', on_delete=models.CASCADE)
+#     telephone = models.CharField('Tелефон', null=True, blank=True, max_length=255)
+#     data_rozdenia = models.DateField('Дата рождения', null=True, blank=True)
 
 
 class Otzivi(models.Model):
     class Meta:
         verbose_name = 'Отзыв'
         verbose_name_plural = 'Отзывы'
-
 
     avtor = models.CharField('Автор', max_length=255)
     otziv = models.TextField('Отзыв')
@@ -208,4 +197,110 @@ class Otzivi(models.Model):
         return self.otziv[0:100]
 
     def __str__(self):
-        return  f'{self.avtor}: {self.otziv[0:100]}...'
+        return f'{self.avtor}: {self.otziv[0:100]}...'
+
+
+class Zayavka(models.Model):
+    class Meta:
+        verbose_name = 'Заявка'
+        verbose_name_plural = 'Заявки'
+
+    postavshik = models.ForeignKey(Postavshiki, verbose_name='Поставщик', on_delete=models.SET_NULL, null=True,
+                                   blank=True)
+    data = models.DateTimeField('Дата', auto_now_add=True)
+    status = models.IntegerField('Тип операции', default=1, choices=(
+        (1, 'Не Выполнено'),
+        (2, 'Выполнено'),
+    ))
+    ispolnitel = models.ForeignKey(User, verbose_name='Исполнитель', on_delete=models.SET_NULL, null=True, blank=False)
+
+    def __str__(self):
+        return f'#{self.id}'
+
+    # save() missing 1 required positional argument: 'send_mail'
+    # def save(self, send_mail, **kwargs):
+    #     self.send_mail(
+    #         'Вам отправлена заявка как поставщику',
+    #         'текст письма',
+    #         settings.EMAIL_HOST_USER,
+    #         [settings.EMAIL_HOST_USER]
+    #                    )
+    #     return JsonResponse({'status' : 'ok'})
+
+    # def save(self):
+    #
+    #
+    #     instance = super(Zayavka, self).save()
+    #     for i in self.detalizayavki_set.all():
+    #         print(i)
+    #     self.send_email()
+    #     return instance
+
+
+    # def save_model(self, request, obj, form, change):
+    #
+    #     detali = DetaliZayavki.objects.filter(zayavka_id=obj.id)
+    #     body = []
+    #     for i in detali:
+    #         body.append(self, i.ingridient, i.kolvo, i.ediz)
+    #
+    #     instance = super(Zayavka, self).save()
+    #
+    #     self.send_email()
+    #
+    #     return instance
+    #
+    # def send_email(self):
+    #     msg = EmailMessage(
+    #         'Кафе "У Дачи" отправило вам заявку на поставку продуктов',
+    #         # body,
+    #         'text',
+    #         settings.EMAIL_HOST_USER,
+    #         [self.postavshik.email],
+    #     )
+    #     msg.content_subtype = "html"
+    #     msg.send()
+
+    def save(self):
+        detali = DetaliZayavki.objects.filter(zayavka_id=id(object))
+        body = []
+
+        for i in detali:
+            ingridient = str(i.ingridient)
+            # kolvo = str(i.kolvo)
+            # ediz = str(i.ediz)
+            body.append(ingridient)
+        print(body)
+        instance = super(Zayavka, self).save()
+        self.send_email(body)
+        return instance
+
+    def send_email(self, body):
+
+
+        msg = EmailMessage(
+            'Кафе "У Дачи" отправило вам заявку на поставку продуктов',
+             body,
+             settings.EMAIL_HOST_USER,
+             [self.postavshik.email],
+        )
+
+        msg.content_subtype = "html"
+        msg.send()
+
+
+class DetaliZayavki(models.Model):
+    class Meta:
+        verbose_name = 'Деталь Заявки'
+        verbose_name_plural = 'Детали Заявки'
+
+    zayavka = models.ForeignKey(Zayavka, verbose_name='Заявка', on_delete=models.SET_NULL, null=True, blank=False, related_name='detali_po_zaiavki')
+    ingridient = models.ForeignKey(Ingridienti, verbose_name='Ингридиент', on_delete=models.SET_NULL, null=True,
+                                   blank=False)
+    kolvo = models.FloatField('Кол-во', default=1)
+    ediz = models.IntegerField('Единица измерения', default=1, choices=(
+        (1, 'шт'),
+        (2, 'кг'),
+        (3, 'л'),
+    ))
+    sklad = models.ForeignKey(Sklad, verbose_name='Склад', on_delete=models.SET_NULL, null=True, blank=False)

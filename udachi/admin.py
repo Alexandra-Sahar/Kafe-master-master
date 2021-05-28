@@ -1,10 +1,10 @@
 from django.contrib import admin
 
-# Register your models here.
-from import_export import resources
+
 from import_export.admin import ImportExportActionModelAdmin, ImportExportModelAdmin
 
-from udachi.models import TipBluda, Bluda, Ingridienti, IngridientiVBlude, Akzia, Zakaz, Otzivi
+from udachi.models import TipBluda, Bluda, Ingridienti, IngridientiVBlude, Zakaz, Otzivi, DetaliZakaza, Zayavka, \
+    DetaliZayavki, Postavshiki, Sklad, Bronirovanie
 
 
 class TipBludaAdmin(ImportExportModelAdmin):
@@ -23,6 +23,14 @@ admin.site.register(Ingridienti, IngridientiAdmin)
 
 class IngridientiVBludeInline(admin.TabularInline):
     model = IngridientiVBlude
+
+
+class DetaliZakazaInline(admin.TabularInline):
+    model = DetaliZakaza
+
+
+class DetaliZayavkiInline(admin.TabularInline):
+    model = DetaliZayavki
 
 
 class BludaAdmin(ImportExportModelAdmin):
@@ -50,35 +58,41 @@ class BludaAdmin(ImportExportModelAdmin):
 admin.site.register(Bluda, BludaAdmin)
 
 
-class AkziaAdmin(ImportExportModelAdmin):
+
+
+class BronirovanieAdmin(ImportExportModelAdmin):
     list_display = [
         'id',
-        'nazvanie',
+        'data',
+        'telephone',
+        'fio',
+        'stolik',
     ]
-    # list_filter = ('nazvanie',)
+
     list_display_links = ['id', ]
-    search_fields = ['nazvanie', ]
-    list_editable = ['nazvanie', ]
-    ordering = ['-nazvanie', ]
+    search_fields = ['data', 'telephone', 'fio', 'stolik', ]
+    list_editable = ['data', ]
+    ordering = ['data', ]
 
-
-admin.site.register(Akzia, AkziaAdmin)
+admin.site.register(Bronirovanie, BronirovanieAdmin)
 
 
 class ZakazAdmin(ImportExportModelAdmin):
+    inlines = [
+        DetaliZakazaInline,
+    ]
     list_display = [
         'id',
         'sposob_otdachi',
         'telephone',
         'fio',
-        'akzia',
         'data_i_vremia_zakaza',
         'adres',
         'stolik',
         'zakaz_proveden'
     ]
 
-    list_filter = ('sposob_otdachi', 'akzia', 'stolik', 'zakaz_proveden')
+    list_filter = ('sposob_otdachi',  'stolik', 'zakaz_proveden')
     list_display_links = ['id', ]
     search_fields = ['telephone', 'data_i_vremia_zakaza', 'fio', 'adres', 'stolik']
     # list_editable = [ 'nazvanie', ]
@@ -87,6 +101,28 @@ class ZakazAdmin(ImportExportModelAdmin):
 
 
 admin.site.register(Zakaz, ZakazAdmin)
+
+
+class ZayavkaAdmin(ImportExportModelAdmin):
+    inlines = [
+        DetaliZayavkiInline,
+    ]
+    list_display = [
+        'id',
+        'postavshik',
+        'data',
+        'status',
+        'ispolnitel',
+    ]
+
+    list_filter = ('postavshik', 'data', 'status', 'ispolnitel')
+    list_display_links = ['id', ]
+    search_fields = ['postavshik', 'data', 'status', 'ispolnitel']
+
+    ordering = ['data', ]
+
+
+admin.site.register(Zayavka, ZayavkaAdmin)
 
 
 class OtziviAdmin(ImportExportModelAdmin):
@@ -109,3 +145,33 @@ class OtziviAdmin(ImportExportModelAdmin):
 
 
 admin.site.register(Otzivi, OtziviAdmin)
+
+
+class PostavshikiAdmin(ImportExportModelAdmin):
+    list_display = [
+        'id',
+        'naimenovanie',
+        'telephone',
+        'email',
+        'adres',
+        'opisanie',
+        'inn',
+    ]
+
+    list_display_links = ['id', ]
+    search_fields = ['naimenovanie', 'telephone', 'inn']
+
+
+admin.site.register(Postavshiki, PostavshikiAdmin)
+
+
+class SkladAdmin(ImportExportModelAdmin):
+    list_display = [
+        'id',
+        'nazvanie',
+    ]
+
+    search_fields = ['nazvanie']
+
+
+admin.site.register(Sklad, SkladAdmin)

@@ -1,0 +1,30 @@
+{% extends 'udachi/base.html' %}
+
+{% block title %}Бронирование{% endblock %}
+{% load static %}
+{% load thumbnail %}
+{% block Content %}
+<br>
+    <div class="col-12 col-sm-12 col-md-12 col-xl-12 col-lg-12 my-5">
+
+<div class="container py-5">
+
+<h2 class="col-12 my-5 text-center">Забронируй столик заранее!</h2>
+
+
+<form method="post" action="{% url 'bronirovanie' %}">
+    {% csrf_token %}
+    {{ form.data }} <br>
+    {{ form.telephone }} <br>
+    {{ form.fio }} <br>
+    {{ form.kolvo_gostei }} <br>
+
+    <span> {{ error }} </span>
+    <button type="submit" class="btn btn-success">Забронировать</button>
+</form>
+<br>
+
+    </div>
+    </div>
+
+{% endblock %}

@@ -1,16 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Exo+2&display=swap');
 
 body{
-    font-family: 'Exo 2', sans-serif;
+    font-family:  Brush Script MT, Brush Script Std, cursive, sans-serif;
 
 }
 
 .carousel-control-prev, .carousel-control-next{
-    background-color: #0f8208;
+
 }
 
 .carousel-caption {
-    position: static;
+
     right: 0;
     bottom: 0;
     /*left: 15%;*/
@@ -20,3 +20,17 @@ body{
     /*color: #fff;*/
     /*text-align: center;*/
 }
+
+form {
+    margin-left: 32%;
+    width: 500px;
+    margin-top: 50px;
+}
+
+ .card-img-top {
+    height: 200px;
+}
+
+ /*.fon {*/
+ /*    background-image: url('udachi/static/baner.jpg');*/
+ /*}*/

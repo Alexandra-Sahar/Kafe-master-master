@@ -37,6 +37,8 @@
 
 <form method="post" action="{% url 'ostavit_otziv' %}">
     {% csrf_token %}
-    {{ forma_ostavit_otziv.as_p }}
+    {{ forma_ostavit_otziv.avtor }} <br>
+    {{ forma_ostavit_otziv.otziv }} <br>
+    {{ forma_ostavit_otziv.telephone_avtora }} <br>
     <button type="submit" class="btn btn-success">Отправить отзыв</button>
 </form>

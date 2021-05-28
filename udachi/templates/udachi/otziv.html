@@ -1,0 +1,48 @@
+{% extends 'udachi/base.html' %}
+
+{% block title %}Отзывы{% endblock %}
+{% load static %}
+{% load thumbnail %}
+
+{% block Content %}
+<br>
+    <div class="col-12 col-sm-12 col-md-12 col-xl-12 col-lg-12 my-5">
+
+<div class="container py-5">
+    <div class="card text-center">
+        <br>
+
+    <br><br>
+        {% for i_otziv in otzivi %}
+  <div class="card text-dark bg-warning mb-3">
+    Отзыв посетителя
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">{{ i_otziv.avtor }}</h5>
+    <p class="card-text">{{ i_otziv.otziv }}</p>
+  </div>
+  <div class="card-footer text-muted">
+    {{ i_otziv.data_otziva }}
+  </div>
+            <br>
+        {% endfor %}
+</div>
+<h2 class="col-12 my-5 text-center">Оставьте и Вы свой отзыв</h2>
+
+{% if alert %}
+<div class="alert alert-info">{{ alert }}</div>
+{% endif %}
+
+<form method="post" action="{% url 'ostavit_otziv' %}">
+    {% csrf_token %}
+    {{ forma_ostavit_otziv.avtor }} <br>
+    {{ forma_ostavit_otziv.otziv }} <br>
+    {{ forma_ostavit_otziv.telephone_avtora }} <br>
+    <button type="submit" class="btn btn-success">Отправить отзыв</button>
+</form>
+<br>
+
+    </div>
+    </div>
+
+{% endblock %}
