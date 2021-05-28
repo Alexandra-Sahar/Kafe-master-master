@@ -33,8 +33,6 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'udachi',
-    'cart',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -43,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'easy_thumbnails',
     'import_export',
+    'cart.apps.CartConfig',
+    'udachi.apps.UdachiConfig',
 
 ]
 

@@ -1,7 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import DetailView
 
-
 # Create your views here.
 from udachi.forms import OstavitOtzivForm, BronirovanieForm
 from udachi.models import Bluda, Otzivi, TipBluda
@@ -99,3 +98,30 @@ def bronirovanie(request):
 
     form = BronirovanieForm()
     return render(request, 'udachi/bronirovanie.html', {'form' : form})
+
+
+    # # РАБОТА С КОРЗИНОЙ
+    #
+    # @require_POST
+    # def cart_add(request, bluda_id):
+    #     cart = Cart(request)
+    #     bluda = get_object_or_404(Bluda, id=bluda_id)
+    #     form = CartAddBludaForm(request.POST)
+    #     if form.is_valid():
+    #         cd = form.cleaned_data
+    #         cart.add(bluda=bluda,
+    #                  quantity=cd['quantity'],
+    #                  update_quantity=cd['update'])
+    #     return redirect('cart : cart_detail')
+    #
+    #
+    # def cart_remove(request, bluda_id):
+    #     cart = Cart(request)
+    #     bluda = get_object_or_404(Bluda, id=bluda_id)
+    #     cart.remove(bluda)
+    #     return redirect('cart : cart_detail')
+    #
+    #
+    # def cart_detail(request):
+    #     cart = Cart(request)
+    #     return render(request, 'cart/detail.html', {'cart': cart})

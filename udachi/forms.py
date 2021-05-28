@@ -1,6 +1,13 @@
 from django.forms import ModelForm, TextInput, Textarea, DateTimeInput
-
+from django import forms
 from udachi.models import Otzivi, Bronirovanie
+
+# PRODUCT_QUANTITY_CHOICES = [(i, str(i)) for i in range(1, 21)]
+#
+#
+# class CartAddBludaForm(forms.Form):
+#     quantity = forms.TypedChoiceField(choices=PRODUCT_QUANTITY_CHOICES, coerce=int)
+#     update = forms.BooleanField(required=False, initial=False, widget=forms.HiddenInput)
 
 
 class OstavitOtzivForm(ModelForm):
