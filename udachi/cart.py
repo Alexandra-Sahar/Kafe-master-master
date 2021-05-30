@@ -16,14 +16,14 @@ class Cart(object):
             cart = self.session[settings.CART_SESSION_ID] = {}
         self.cart = cart
 
-    def add(self, bluda, quantity=1, update_quantity=False):
+    def add(self, Bluda, quantity=1, update_quantity=False):
         """
         Добавить продукт в корзину или обновить его количество.
         """
         bluda_id = str(Bluda.id)
         if bluda_id not in self.cart:
-            self.cart[bluda_id] = {'quantity' : 0,
-                                     'price' : str(Bluda.cena)}
+            self.cart[bluda_id] = {'quantity': 0,
+                                   'price': str(Bluda.cena)}
         if update_quantity:
             self.cart[bluda_id]['quantity'] = quantity
         else:
@@ -53,7 +53,7 @@ class Cart(object):
         # получение объектов product и добавление их в корзину
         bludas = Bluda.objects.filter(id__in=bluda_ids)
         for bluda in bludas:
-            self.cart[str(bluda.id)]['bluda'] = bluda
+            self.cart[str(Bluda.id)]['bluda'] = bluda
 
         for item in self.cart.values():
             item['price'] = Decimal(item['price'])

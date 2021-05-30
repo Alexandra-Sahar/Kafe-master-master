@@ -72,6 +72,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'udachi.context_processors.cart',
             ],
         },
     },
@@ -136,7 +137,7 @@ USE_TZ = True
 
 # SESSION_ENGINE = 'Cached sessions'
 
-CART_SESSION_ID = 'cart'
+CART_SESSION_ID = 'udachi'
 
 
 # Static files (CSS, JavaScript, Images)

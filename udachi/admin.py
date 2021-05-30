@@ -88,13 +88,12 @@ class ZakazAdmin(ImportExportModelAdmin):
         'fio',
         'data_i_vremia_zakaza',
         'adres',
-        'stolik',
         'zakaz_proveden'
     ]
 
-    list_filter = ('sposob_otdachi',  'stolik', 'zakaz_proveden')
+    list_filter = ('sposob_otdachi',   'zakaz_proveden')
     list_display_links = ['id', ]
-    search_fields = ['telephone', 'data_i_vremia_zakaza', 'fio', 'adres', 'stolik']
+    search_fields = ['telephone', 'data_i_vremia_zakaza', 'fio', 'adres' ]
     # list_editable = [ 'nazvanie', ]
 
     ordering = ['data_i_vremia_zakaza', ]

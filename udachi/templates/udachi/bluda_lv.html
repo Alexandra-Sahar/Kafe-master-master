@@ -21,8 +21,8 @@
                 <div class="col-12 col-md-6 col-lg-4 col-xl-4">
                     <div class="card text-dark bg-warning mb-3">
 
-                            {% thumbnail i_bluda.prevyu 350x350 as image %}
-                            <img class="card-img-top" src="{{ image.url }}">
+                        {% thumbnail i_bluda.prevyu 350x350 as image %}
+                        <img class="card-img-top" src="{{ image.url }}">
 
 
                         <div class="card-body">
@@ -35,7 +35,7 @@
                             <form action="{% url "cart_add" i_bluda.id %}" method="post">
                                 {{ cart_bluda_form }}
                                 {% csrf_token %}
-                                <input class="btn btn-success" type="submit" value="В корзину">
+                                <input type="submit" value="Add to cart">
                             </form>
 
                         </div>

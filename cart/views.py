@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from udachi.models import Bluda
-from cart.cart import Cart
+from udachi.cart import Cart
 from .forms import CartAddBludaForm
 
 
@@ -27,4 +27,4 @@ def cart_remove(request, bluda_id):
 
 def cart_detail(request):
     cart = Cart(request)
-    return render(request, 'cart/detail.html', {'cart': cart})
+    return render(request, 'cart/../udachi/templates/udachi/detail.html', {'cart': cart})

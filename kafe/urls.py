@@ -19,9 +19,9 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from udachi.views import render_page_home, render_page_bluda_lv, ostavit_otziv, otziv, NewsDetailView, contacts, \
-    bronirovanie
+    bronirovanie, cart_detail, cart_add, cart_remove, zakaz_create
 
-from cart.views import cart_detail, cart_add, cart_remove
+# from cart.views import cart_detail, cart_add, cart_remove
 
 urlpatterns = [
                   path('admin/', admin.site.urls),
@@ -30,9 +30,10 @@ urlpatterns = [
                   path('otziv/', otziv, name='otziv'),
                   path('ostavit_otziv/', ostavit_otziv, name='ostavit_otziv'),
                   path('bludaveiw/<pk>/', NewsDetailView.as_view(), name='detail_view'),
-                  path('cart_detail/<bluda_id>/', cart_detail, name='cart_detail'),
+                  path('cart_detail/', cart_detail, name='cart_detail'),
                   path('cart_add/<bluda_id>/', cart_add, name='cart_add'),
                   path('cart_remove/<bluda_id>/', cart_remove, name='cart_remove'),
                   path('contacts/', contacts, name='contacts'),
                   path('bronirovanie/', bronirovanie, name='bronirovanie'),
+                  path('zakaz_create/', zakaz_create, name='zakaz_create'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

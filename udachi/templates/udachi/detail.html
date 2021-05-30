@@ -1,38 +1,38 @@
 {% extends "udachi/base.html" %}
+{% load thumbnail %}
 {% load static %}
 {% block title %}
     Корзина
 {% endblock %}
 {% block Сontent %}
-    <h1>Ваша корзина</h1>
+    <h2>Ваша корзина</h2>
     <table class="cart">
         <thead>
         <tr>
-            <th>Image</th>
-            <th>Product</th>
-            <th>Quantity</th>
-            <th>Remove</th>
-            <th>Unit price</th>
-            <th>Price</th>
+            <th>Изображение</th>
+            <th>Блюдо</th>
+            <th>Количество</th>
+            <th>Удалить</th>
+            <th>Цена</th>
+            <th>Стоимость</th>
         </tr>
         </thead>
         <tbody>
         {% for item in cart %}
-            {% with bluda=item.bluda %}
+            {% with bluda=item.Bluda %}
                 <tr>
                     <td>
-
-                            {% if bluda.prevyu %}
-            {% thumbnail bluda.prevyu 350x350 as image %}
-            <img class="card-img-top" src="/{{ image }}">
-        {% else %}
-            <img class="card-img-top img-fluid" src="{% static 'udachi/logo.png' %}">
-        {% endif %}
+                        {% if bluda.prevyu %}
+                            {% thumbnail bluda.prevyu 350x350 as image %}
+                            <img class="card-img-top" src="{{ image }}">
+                        {% else %}
+                            <img class="card-img-top img-fluid" src="{% static 'udachi/logo.png' %}">
+                        {% endif %}
 
                     </td>
                     <td>{{ bluda.nazvanie }}</td>
                     <td>{{ item.quantity }}</td>
-                    <td><a href="{% url "cart:cart_remove" bluda.id%}">Удалить</a></td>
+                    <td><a href="{% url "cart_remove" bluda.id %}">Удалить</a></td>
                     <td class="num">${{ item.price }}</td>
                     <td class="num">${{ item.total_price }}</td>
                 </tr>
@@ -47,6 +47,8 @@
     </table>
     <p class="text-right">
         <a href="{% url 'home' %}" class="button light">Продолжить покупку</a>
-        <a href="#" class="button">Checkout</a>
+        <a href="{% url "zakaz_create" %}" class="button">Заказать</a>
     </p>
+
+
 {% endblock %}

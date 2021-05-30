@@ -24,8 +24,9 @@
     <h2> Кафе "У Дачи" </h2>
     <a class="navbar-brand" href="{% url 'home' %}"><img src="{% static 'udachi/лого.png' %}" height="65px"></a>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent"
+            aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
     </button>
     <ul class="navbar-nav mr-auto " id="navbarToggleExternalContent">
         <li class="nav-item active">
@@ -70,13 +71,26 @@
 
         <div class="text-dark "><b>8-914-475-68-81</b> <span class="mx-2">|</span>
             <span> <b>Смоленка, Ручейная 7</b></span>
-            <a class="btn btn-outline-light my-2 my-sm-0 ml-3" href="#"><i class="fa fa-shopping-cart"></i> Корзина</a>
+            <a class="btn btn-outline-light my-2 my-sm-0 ml-3" href="{% url 'cart_detail' %}"><i
+                    class="fa fa-shopping-cart"></i> Корзина</a>
+            <div class="cart">
+                {% with total_items=cart|length %}
+                    {% if cart|length > 0 %}
+                        Your cart:
+                        <a href="{% url "cart_detail" %}">
+                            {{ total_items }} item{{ total_items|pluralize }},
+                            ${{ cart.get_total_price }}
+                        </a>
+                    {% else %}
+                        Your cart is empty.
+                    {% endif %}
+                {% endwith %}
+            </div>
         </div>
 
     </div>
 
     </div>
-
 
 
 </nav>

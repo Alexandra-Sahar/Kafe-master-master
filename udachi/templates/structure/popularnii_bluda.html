@@ -1,35 +1,35 @@
 {% load thumbnail %}
 {% load static %}
 
-<div class="col-12"><h2 class="text-center mb-5" >Популярные блюда</h2></div>
+<div class="col-12"><h2 class="text-center mb-5">Популярные блюда</h2></div>
 
 
 
 {% for i_bluda in bluda_iz_topa %}
-    <div class="col-12 col-md-6 col-lg-4 col-xl-4" >
+    <div class="col-12 col-md-6 col-lg-4 col-xl-4">
         <div class="card text-dark bg-warning mb-3">
-           {% if i_bluda.prevyu %}
-               {% thumbnail i_bluda.prevyu 350x350 as image %}
-               <img class="card-img-top" src="{{ image }}">
-           {% else %}
-               <img class="card-img-top img-fluid" src="{% static 'udachi/logo.png' %}">
-           {% endif %}
+            {% if i_bluda.prevyu %}
+                {% thumbnail i_bluda.prevyu 350x350 as image %}
+                <img class="card-img-top" src="{{ image }}">
+            {% else %}
+                <img class="card-img-top img-fluid" src="{% static 'udachi/logo.png' %}">
+            {% endif %}
 
             <div class="card-body">
                 <h5 class="card-title">{{ i_bluda.nazvanie }}</h5>
                 <p class="card-text">{{ i_bluda.cena }} рублей</p>
-{#                <a href="#" class="btn btn-outline-success">В корзину</a>#}
-                <a href="{% url "detail_view" i_bluda.id %}" class = "btn btn-secondary">Подробнее</a>
+                {#                <a href="#" class="btn btn-outline-success">В корзину</a>#}
+                <a href="{% url "detail_view" i_bluda.id %}" class="btn btn-secondary">Подробнее</a>
 
                 <form action="{% url "cart_add" i_bluda.id %}" method="post">
-                {% csrf_token %}
-                    {{ form }}
-                <input class="btn btn-success" type="submit" value="В корзину">
+                    {{ cart_bluda_form }}
+                    {% csrf_token %}
+                    <input class="btn btn-success" type="submit" value="В корзину">
                 </form>
             </div>
         </div>
     </div>
 
 
-   <br>
+    <br>
 {% endfor %}

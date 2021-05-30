@@ -54,6 +54,18 @@ class IngridientiVBlude(models.Model):
     bludo = models.ForeignKey(Bluda, verbose_name='Блюда', on_delete=models.SET_NULL, null=True)
     gramovka = models.FloatField('Граммовка', )
 
+class Bronirovanie(models.Model):
+    class Meta:
+        verbose_name = 'Бронирование'
+        verbose_name_plural = 'Бронирования'
+
+    data = models.DateTimeField('Дата', null=True, blank=True)
+    telephone = models.CharField('Tелефон', null=False, blank=False, max_length=255, )
+    fio = models.CharField('ФИО', null=True, blank=True, max_length=255, )
+    status_bronirovania = models.BooleanField('Бронь  подтверждена', default=False)
+    predoplata = models.BooleanField('Предоплата', default=False)
+    kolvo_gostei = models.IntegerField('Количество гостей', null=True, blank=True)
+    stolik = models.IntegerField('Номер столика', null=True, blank=True, )
 
 class Zakaz(models.Model):
     class Meta:
@@ -70,11 +82,15 @@ class Zakaz(models.Model):
     fio = models.CharField('ФИО', max_length=255, null=True, blank=True)
     data_i_vremia_zakaza = models.DateTimeField('Время заказа', auto_now_add=True, editable=False)
     adres = models.CharField('Адрес', max_length=255, null=True, blank=True, )
-    stolik = models.IntegerField('Номер столика', null=True, blank=True, )
     zakaz_proveden = models.BooleanField('Заказ проведен', null=True, blank=True, )
+    email = models.EmailField('Электронная почта', null=False, blank=False, default='kafeudachismolenka@gmail.com')
+    bronirovanie = models.CharField('Бронирование', max_length=20, null=True, blank=True )
 
     def __str__(self):
         return f'#{self.id}'
+
+    def get_total_cost(self):
+        return sum(item.get_cost() for item in self.items.all())
 
 
 class DetaliZakaza(models.Model):
@@ -87,19 +103,13 @@ class DetaliZakaza(models.Model):
     kolvo = models.FloatField('Кол-во', default=1)
     stoimost_na_moment_realizazii = models.FloatField('Цена на момент реализации', null=True, blank=True)
 
+    def __str__(self):
+        return '{}'.format(self.id)
 
-class Bronirovanie(models.Model):
-    class Meta:
-        verbose_name = 'Бронирование'
-        verbose_name_plural = 'Бронирования'
+    def get_cost(self):
+        return self.stoimost_na_moment_realizazii * self.kolvo
 
-    data = models.DateTimeField('Дата', null=True, blank=True)
-    telephone = models.CharField('Tелефон', null=False, blank=False, max_length=255, )
-    fio = models.CharField('ФИО', null=True, blank=True, max_length=255, )
-    status_bronirovania = models.BooleanField('Бронь  подтверждена', default=False)
-    predoplata = models.BooleanField('Предоплата', default=False)
-    kolvo_gostei = models.IntegerField('Количество гостей', null=True, blank=True)
-    stolik = models.IntegerField('Номер столика', null=True, blank=True, )
+
 
 
 class Sklad(models.Model):
