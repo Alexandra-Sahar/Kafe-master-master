@@ -21,7 +21,7 @@
                 {#                <a href="#" class="btn btn-outline-success">В корзину</a>#}
                 <a href="{% url "detail_view" i_bluda.id %}" class="btn btn-secondary">Подробнее</a>
 
-                <form action="{% url "cart_add" i_bluda.id %}" method="post">
+                <form action="{% url "cart_add" i_bluda.id %}" method="post" class="card-text">
                     {{ cart_bluda_form }}
                     {% csrf_token %}
                     <input class="btn btn-success" type="submit" value="В корзину">

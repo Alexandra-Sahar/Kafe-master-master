@@ -54,6 +54,7 @@ class IngridientiVBlude(models.Model):
     bludo = models.ForeignKey(Bluda, verbose_name='Блюда', on_delete=models.SET_NULL, null=True)
     gramovka = models.FloatField('Граммовка', )
 
+
 class Bronirovanie(models.Model):
     class Meta:
         verbose_name = 'Бронирование'
@@ -66,6 +67,7 @@ class Bronirovanie(models.Model):
     predoplata = models.BooleanField('Предоплата', default=False)
     kolvo_gostei = models.IntegerField('Количество гостей', null=True, blank=True)
     stolik = models.IntegerField('Номер столика', null=True, blank=True, )
+
 
 class Zakaz(models.Model):
     class Meta:
@@ -84,7 +86,7 @@ class Zakaz(models.Model):
     adres = models.CharField('Адрес', max_length=255, null=True, blank=True, )
     zakaz_proveden = models.BooleanField('Заказ проведен', null=True, blank=True, )
     email = models.EmailField('Электронная почта', null=False, blank=False, default='kafeudachismolenka@gmail.com')
-    bronirovanie = models.CharField('Бронирование', max_length=20, null=True, blank=True )
+    bronirovanie = models.CharField('Бронирование', max_length=20, null=True, blank=True)
 
     def __str__(self):
         return f'#{self.id}'
@@ -108,8 +110,6 @@ class DetaliZakaza(models.Model):
 
     def get_cost(self):
         return self.stoimost_na_moment_realizazii * self.kolvo
-
-
 
 
 class Sklad(models.Model):
@@ -182,14 +182,7 @@ class Postavshiki(models.Model):
         return self.naimenovanie
 
 
-# class Sotrudnic(models.Model):
-#     class Meta:
-#         verbose_name = 'Сотрудник'
-#         verbose_name_plural = 'Сотрудники'
-#
-#     user = models.OneToOneField(User, verbose_name='Логин', on_delete=models.CASCADE)
-#     telephone = models.CharField('Tелефон', null=True, blank=True, max_length=255)
-#     data_rozdenia = models.DateField('Дата рождения', null=True, blank=True)
+
 
 
 class Otzivi(models.Model):
@@ -227,72 +220,29 @@ class Zayavka(models.Model):
     def __str__(self):
         return f'#{self.id}'
 
-    # save() missing 1 required positional argument: 'send_mail'
-    # def save(self, send_mail, **kwargs):
-    #     self.send_mail(
-    #         'Вам отправлена заявка как поставщику',
-    #         'текст письма',
-    #         settings.EMAIL_HOST_USER,
-    #         [settings.EMAIL_HOST_USER]
-    #                    )
-    #     return JsonResponse({'status' : 'ok'})
 
-    # def save(self):
-    #
-    #
-    #     instance = super(Zayavka, self).save()
-    #     for i in self.detalizayavki_set.all():
-    #         print(i)
-    #     self.send_email()
-    #     return instance
-
-
-    # def save_model(self, request, obj, form, change):
-    #
-    #     detali = DetaliZayavki.objects.filter(zayavka_id=obj.id)
-    #     body = []
-    #     for i in detali:
-    #         body.append(self, i.ingridient, i.kolvo, i.ediz)
-    #
-    #     instance = super(Zayavka, self).save()
-    #
-    #     self.send_email()
-    #
-    #     return instance
-    #
-    # def send_email(self):
-    #     msg = EmailMessage(
-    #         'Кафе "У Дачи" отправило вам заявку на поставку продуктов',
-    #         # body,
-    #         'text',
-    #         settings.EMAIL_HOST_USER,
-    #         [self.postavshik.email],
-    #     )
-    #     msg.content_subtype = "html"
-    #     msg.send()
 
     def save(self):
-        detali = DetaliZayavki.objects.filter(zayavka_id=id(object))
-        body = []
-
+        detali = DetaliZayavki.objects.filter(zayavka_id=self.id)
+        text = " "
         for i in detali:
+            kolvo = str(i.kolvo)
             ingridient = str(i.ingridient)
-            # kolvo = str(i.kolvo)
             # ediz = str(i.ediz)
-            body.append(ingridient)
-        print(body)
+            # text = text + " Товар " + str(ingridient) + " в количестве " + str(kolvo) + " " + str(ediz) + ". "
+            text = text + " Товар " + str(ingridient) + " в количестве " + str(kolvo) + " кг.   "
+
+
         instance = super(Zayavka, self).save()
-        self.send_email(body)
+        self.send_email(text)
         return instance
 
-    def send_email(self, body):
-
-
+    def send_email(self, text):
         msg = EmailMessage(
             'Кафе "У Дачи" отправило вам заявку на поставку продуктов',
-             body,
-             settings.EMAIL_HOST_USER,
-             [self.postavshik.email],
+            text,
+            settings.EMAIL_HOST_USER,
+            [self.postavshik.email],
         )
 
         msg.content_subtype = "html"
@@ -304,7 +254,8 @@ class DetaliZayavki(models.Model):
         verbose_name = 'Деталь Заявки'
         verbose_name_plural = 'Детали Заявки'
 
-    zayavka = models.ForeignKey(Zayavka, verbose_name='Заявка', on_delete=models.SET_NULL, null=True, blank=False, related_name='detali_po_zaiavki')
+    zayavka = models.ForeignKey(Zayavka, verbose_name='Заявка', on_delete=models.SET_NULL, null=True, blank=False,
+                                related_name='detali_po_zaiavki')
     ingridient = models.ForeignKey(Ingridienti, verbose_name='Ингридиент', on_delete=models.SET_NULL, null=True,
                                    blank=False)
     kolvo = models.FloatField('Кол-во', default=1)

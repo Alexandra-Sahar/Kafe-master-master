@@ -21,13 +21,20 @@ class Cart(object):
         Добавить продукт в корзину или обновить его количество.
         """
         bluda_id = str(Bluda.id)
+
         if bluda_id not in self.cart:
             self.cart[bluda_id] = {'quantity': 0,
-                                   'price': str(Bluda.cena)}
+                                   'price': str(Bluda.cena),
+                                   'название' : str(Bluda.nazvanie),
+                                   'prevyu' : str(Bluda.prevyu),
+                                   'top' : Bluda.kolvo_dobavlenia_v_korzinu}
         if update_quantity:
             self.cart[bluda_id]['quantity'] = quantity
+            self.cart[bluda_id]['top'] += 1
         else:
             self.cart[bluda_id]['quantity'] += quantity
+            self.cart[bluda_id]['top'] += 1
+        self.cart[bluda_id]['top'] += 1
         self.save()
 
     def save(self):
@@ -36,11 +43,11 @@ class Cart(object):
         # Отметить сеанс как "измененный", чтобы убедиться, что он сохранен
         self.session.modified = True
 
-    def remove(self, product):
+    def remove(self, bluda):
         """
         Удаление товара из корзины.
         """
-        bluda_id = str(Bluda.id)
+        bluda_id = str(bluda.id)
         if bluda_id in self.cart:
             del self.cart[bluda_id]
             self.save()
@@ -53,7 +60,7 @@ class Cart(object):
         # получение объектов product и добавление их в корзину
         bludas = Bluda.objects.filter(id__in=bluda_ids)
         for bluda in bludas:
-            self.cart[str(Bluda.id)]['bluda'] = bluda
+            self.cart[str(bluda.id)]['bluda'] = bluda
 
         for item in self.cart.values():
             item['price'] = Decimal(item['price'])

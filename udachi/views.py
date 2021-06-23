@@ -14,7 +14,9 @@ from udachi.cart import Cart
 def cart_add(request, bluda_id):
     cart = Cart(request)
     bluda = get_object_or_404(Bluda, id=bluda_id)
+    bluda.kolvo_dobavlenia_v_korzinu += 1
     form = CartAddBludaForm(request.POST)
+
     if form.is_valid():
         cd = form.cleaned_data
         cart.add(Bluda=bluda,
@@ -134,7 +136,7 @@ def zakaz_create(request):
             zakaz = form.save()
             for item in cart:
                 DetaliZakaza.objects.create(zakaz=zakaz,
-                                    bluda=item['bluda'],
+                                    bludo=item['bluda'],
                                     stoimost_na_moment_realizazii=item['price'],
                                     kolvo=item['quantity'])
             # очистка корзины

@@ -1,4 +1,4 @@
-from django.forms import ModelForm, TextInput, Textarea, DateTimeInput
+from django.forms import ModelForm, TextInput, Textarea, DateTimeInput, Select, EmailInput
 from django import forms
 from udachi.models import Otzivi, Bronirovanie, Zakaz
 import datetime
@@ -49,14 +49,14 @@ class ZakazCreateForm(ModelForm):
 
 
         widgets = {
-            "sposob_otdachi": TextInput(attrs={
+            "sposob_otdachi": Select(attrs={
                 'class': 'form-control'}),
             "fio": TextInput(attrs={
                 'class': 'form-control', 'placeholder': 'Как можно к вам обращаться?'}),
             "telephone": TextInput(attrs={
                 'class': 'form-control', 'placeholder': 'Номер телефона для подтверждения',
                 'data-mask': '+7-000-000-00-00'}),
-            "email": TextInput(attrs={
+            "email": EmailInput(attrs={
                 'class': 'form-control', 'placeholder': 'Укажите адрес почты'}),
             "adres": TextInput(attrs={
                 'class': 'form-control', 'placeholder': 'Укажите адрес при доставке'}),

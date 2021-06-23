@@ -4,10 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
+    {#    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"#}
+    {#          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">#}
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
 
-
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="{% static 'udachi/style.css' %}">
 
@@ -21,13 +32,16 @@
     {#                <img src="{% static 'udachi/лого.png' %}" alt="" height="65">#}
     {#                <p> Кафе "У Дачи" </p>#}
     {#            </a>#}
-    <h2> Кафе "У Дачи" </h2>
-    <a class="navbar-brand" href="{% url 'home' %}"><img src="{% static 'udachi/лого.png' %}" height="65px"></a>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent"
-            aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+    <a class="navbar-brand" href="{% url 'home' %}"><div class="form-inline my-2 my-lg-0">
+        <h2> Кафе "У Дачи" </h2>
+        <img src="{% static 'udachi/лого.png' %}" height="65px"></div>
+    </a>
+
+{#    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent"#}
+{#            aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">#}
+{#        <span class="navbar-toggler-icon"></span>#}
+{#    </button>#}
     <ul class="navbar-nav mr-auto " id="navbarToggleExternalContent">
         <li class="nav-item active">
             <a class="nav-link" href="{% url 'home' %}">Главная</a>
@@ -40,11 +54,11 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarDarkDropdownMenuLink">
                 <li><a class="dropdown-item" href="{% url 'bluda_lv' vid=5 %}">Напитки</a></li>
-                <li><a class="dropdown-item" href="{% url 'bluda_lv' vid=6 %}">Соусы</a></li>
+                <li><a class="dropdown-item" href="{% url 'bluda_lv' vid=6 %}">Супы</a></li>
                 <li><a class="dropdown-item" href="{% url 'bluda_lv' vid=7 %}">Десерты</a></li>
                 <li><a class="dropdown-item" href="{% url 'bluda_lv' vid=8 %}">Выпечка</a></li>
                 <li><a class="dropdown-item" href="{% url 'bluda_lv' vid=9 %}">Шаурма</a></li>
-                <li><a class="dropdown-item" href="{% url 'bluda_lv' vid=10 %}">Блюда на мангале</a></li>
+                <li><a class="dropdown-item" href="{% url 'bluda_lv' vid=10 %}">Салаты</a></li>
                 <li><a class="dropdown-item" href="{% url 'bluda_lv' vid=11 %}">Пицца</a></li>
                 <li><a class="dropdown-item" href="{% url 'bluda_lv' vid=12 %}">Роллы</a></li>
             </ul>
@@ -71,22 +85,18 @@
 
         <div class="text-dark "><b>8-914-475-68-81</b> <span class="mx-2">|</span>
             <span> <b>Смоленка, Ручейная 7</b></span>
-            <a class="btn btn-outline-light my-2 my-sm-0 ml-3" href="{% url 'cart_detail' %}"><i
-                    class="fa fa-shopping-cart"></i> Корзина</a>
-            <div class="cart">
-                {% with total_items=cart|length %}
-                    {% if cart|length > 0 %}
-                        Your cart:
-                        <a href="{% url "cart_detail" %}">
-                            {{ total_items }} item{{ total_items|pluralize }},
-                            ${{ cart.get_total_price }}
-                        </a>
-                    {% else %}
-                        Your cart is empty.
-                    {% endif %}
-                {% endwith %}
-            </div>
+            {% with total_items=cart|length %}
+                {% if cart|length > 0 %}
+                    <a class="btn btn-outline-light my-2 my-sm-0 ml-3" href="{% url 'cart_detail' %}"><i
+                            class="fa fa-shopping-cart"></i> {{ cart.get_total_price }} <em> руб </em></a>
+
+                {% else %}
+                    <a class="btn btn-outline-light my-2 my-sm-0 ml-3" href="{% url 'cart_detail' %}"><i
+                            class="fa fa-shopping-cart"></i> Корзина</a>
+                {% endif %}
+            {% endwith %}
         </div>
+    </div>
 
     </div>
 
@@ -96,7 +106,7 @@
 </nav>
 
 <main class="py5">
-    {% block Content %}{% endblock %}
+    {% block Content %} {% endblock %}
 </main>
 
 <footer class="w-100 bg-dark text-white text-center fixed-bottom">

@@ -35,7 +35,7 @@
                             <form action="{% url "cart_add" i_bluda.id %}" method="post">
                                 {{ cart_bluda_form }}
                                 {% csrf_token %}
-                                <input type="submit" value="Add to cart">
+                                <input class="btn btn-success" type="submit" value="В корзину">
                             </form>
 
                         </div>
